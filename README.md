@@ -4,7 +4,7 @@
 # Probleem: Vaja lahendada graafikul põhinevat ÜL
 
 # Arendusidee:
-Luua programm, mis võtab sisendiks funktsiooni avaldise ja kuvab kasutaja poolt määratud vahemikus funktsiooni graafiku.
+Luua programm, mis võtab sisendiks funktsiooni avaldise ja kuvab kasutaja poolt määratud reaalarvude vahemikus funktsiooni graafiku.
 
 # Lingid
 Trello: https://trello.com/b/ADB619gm/tarkvaraprojekt
