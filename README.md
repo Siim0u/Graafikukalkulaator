@@ -3,7 +3,7 @@
 # Rühma liikmed: Georg Järvis, Siim Sillaots
 # Probleem: Vaja lahendada graafikul põhinevat ÜL
 
-# Arendusidee:
+# Arendusidee
 Luua programm, mis võtab sisendiks funktsiooni avaldise ja kuvab kasutaja poolt määratud reaalarvude vahemikus funktsiooni graafiku.
 
 # Lingid
