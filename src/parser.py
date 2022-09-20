@@ -4,17 +4,21 @@ class Token:
         self.tokenValue = value
 
 tokenList = []
+readerState = 0
+last = 0
 rawinput = input("Sisesta avaldis: ").strip(' ')
 
-last = 0
 for i in range(len(rawinput)):
-    if (rawinput[i] in ['+', '-', '*', '/', '(', ')']):
-        if i - last != 0:
+    if rawinput[i] >= '0' and rawinput[i] <= '9' and readerState == 0:
+        last = i
+        readerState = 1
+    elif rawinput[i] in ['+', '-', '*', '/', '(', ')']:
+        if readerState == 1:
             tokenList.append(Token("number", float(rawinput[last:i])))
+            readerState = 0
         tokenList.append(Token("operand", rawinput[i]))
-        last = i + 1
 
-if (last != len(rawinput)):
+if readerState == 1:
     tokenList.append(Token("number", float(rawinput[last:len(rawinput)])))
 
 for i in range(len(tokenList)):
