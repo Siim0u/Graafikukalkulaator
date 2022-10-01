@@ -24,7 +24,6 @@ if readerState == 1:
 def GetOperation(tokenList, offset):
     currentOperation = [0, 0, 0]
     for j in range(3):
-        print(j)
         i = j + offset
         if tokenList[i].value == '(':
             newParenthesis = 0
