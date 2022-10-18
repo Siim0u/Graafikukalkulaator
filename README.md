@@ -14,9 +14,9 @@ Google Drive: https://drive.google.com/drive/folders/13XvN-_gMQXf8joZv-416Mkm8wi
 ![image](https://user-images.githubusercontent.com/112854111/189603438-b3f2f530-5554-46f0-83f2-30d606e50adc.png)
 
 # Prototüübi kasutusjuhend
-Pärast faili "prototüüp2.py" käivitamist küsitakse kasutajalt funktsiooni avaldist, mille põhjal joonistatakse TKinteri canvasele graafik. Avaldis võib kuid ei pea sisaldama tundmatut. Sobilikud avadlised on näiteks 3*x, (3+x)*(x+1), x ja 4.
+Pärast faili "prototüüp2.py" käivitamist küsitakse kasutajalt funktsiooni avaldist, mille põhjal joonistatakse TKinteri canvasele graafik. Avaldis võib, kuid ei pea sisaldama tundmatut. Sobilikud avadlised on näiteks 3*x, (3+x)*(x+1), x ja 4.
 ## Funktsioonid
-Avaldises võib kasutada ka erinevaid matemaatilisi funktsioone. Praegu toetab programm järgnevaid funktsioone:
+Avaldises võib kasutada ka erinevaid matemaatilisi funktsioone. Programm toetab järgnevaid funktsioone:
 - Trigonomeetrilised funktsioonid
   - sin
   - cos
