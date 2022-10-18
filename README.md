@@ -16,7 +16,7 @@ Avaldises võib kasutada ka erinevaid matemaatilisi funktsioone. Programm toetab
   - tan
 - Naturaallogaritm -> ln
 - Logaritm -> logx, kus x on logaritmi alus (nt. log10)
-- Juurimine -> rtx, kus x on juuritav (nt. rt2)
+- Juurimine -> rtx, kus x on juurija (nt. rt2)
 - Astendamine -> powx, kus x on astendaja (nt. pow3)
 
 Funktsiooni argument tuleb lisada vahetult pärast funktsiooni nimetust sulgudesse (nt. log2(16) ja sin(0.5 * x)).
