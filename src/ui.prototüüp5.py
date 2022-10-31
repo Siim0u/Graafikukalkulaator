@@ -133,7 +133,7 @@ def Compute(tokenList, xvalue, rawfunction = 0, globalError = False):
             if len(tokenList) <= 3: # Kui tehe on + või - ja see on viimane allesjäänud tehe, võib selle kohe välja arvutada
                 tokenList[0] = ComputeOperation(currentOperation)
                 del tokenList[1:3]
-            elif GetOperation(tokenList, 2, xvalue)[1] in ['+', '-']:   # Kui + või - tehe ei ole viimane, kuid ka sellest järgmine tehe on + või -, võib kohe arvutada
+            elif GetOperation(tokenList, 2, xvalue, globalError)[1] in ['+', '-']:   # Kui + või - tehe ei ole viimane, kuid ka sellest järgmine tehe on + või -, võib kohe arvutada
                 tokenList[0] = ComputeOperation(currentOperation)
                 del tokenList[1:3]
             else:   # Kui + või - tehe ei ole viimane, ja sellest järgmine tehe on * või /, arvutatakse kohe välja järgmise tehte väärtus ja eelmine tehe arvutatakse välja järgmisel tsüklil, kui see siis võimalik on
