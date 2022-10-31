@@ -15,7 +15,7 @@ for i in range(len(rawinput)):
     if rawinput[i] >= '0' and rawinput[i] <= '9' and (readerState & 1) == 0:
         last = i
         readerState |= 1
-    elif rawinput[i] >= 'a' and rawinput[i] <= 'z' and (readerState & 1) == 0:
+    elif rawinput[i] >= 'a' and rawinput[i] <= 'z' and (readerState & 2) == 0:
         last = i
         readerState |= 2
     elif rawinput[i] in ['+', '-', '*', '/', '(', ')']:
