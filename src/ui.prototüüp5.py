@@ -1,5 +1,5 @@
 import math, tkinter
-from tkinter import *   
+from tkinter import *
 from tkinter import ttk
 
 class Token:
@@ -7,7 +7,6 @@ class Token:
         self.type = type
         self.value = value
         self.function = function
-
 
 master = tkinter.Tk()
 
@@ -25,47 +24,51 @@ y_start.place(x=50, y=100, width=50)
 y_end = ttk.Entry(controls)
 y_end.place(x=150, y=100, width=50)
 
-rawinput = ""
-
 entry = ttk.Entry(controls)
 entry.place(x=50, y=150, width=150)
-
 
 def startfunc():
     tokenList = []
     readerState = 0
     last = 0
     rawinput = entry.get()
-    print(rawinput)
     for i in range(len(rawinput)):
-        if rawinput[i] >= '0' and rawinput[i] <= '9' and (readerState & 1) == 0:
+        if rawinput[i] >= '0' and rawinput[i] <= '9' and (readerState & 3) == 0:
             last = i
             readerState |= 1
-        elif rawinput[i] >= 'a' and rawinput[i] <= 'z' and (readerState & 2) == 0:
+        elif rawinput[i] >= 'a' and rawinput[i] <= 'z' and (readerState & 3) == 0:
             last = i
             readerState |= 2
         elif rawinput[i] in ['+', '-', '*', '/', '(', ')']:
-            if (readerState & 1) != 0:
-                tokenList.append(Token("number", float(rawinput[last:i])))
-                readerState &= ~1
-            if (readerState & 2) == 0:
-                tokenList.append(Token("operand", rawinput[i]))
+            if (readerState & 4) != 0 and rawinput[i] == '-':
+                last = i
+                readerState |= 1
+                readerState &= ~4
             else:
-                functionName = rawinput[last:i]
-                if functionName == "x":
-                    tokenList.append(Token("x", 0))
+                if (readerState & 1) != 0:
+                    tokenList.append(Token("number", float(rawinput[last:i])))
+                    readerState &= ~1
+                if (readerState & 2) == 0:
                     tokenList.append(Token("operand", rawinput[i]))
                 else:
-                    tokenList.append(Token("operand", rawinput[i], rawinput[last:i]))
-                readerState &= ~2
+                    functionName = rawinput[last:i]
+                    if functionName == "x":
+                        tokenList.append(Token("x", 0))
+                        tokenList.append(Token("operand", rawinput[i]))
+                    else:
+                        tokenList.append(Token("operand", rawinput[i], rawinput[last:i]))
+                    readerState &= ~2
+            
+            if rawinput[i] == '(':
+                readerState |= 4
+        elif (readerState & 4) != 0:
+            readerState &= ~4
 
     if (readerState & 1) != 0:
         tokenList.append(Token("number", float(rawinput[last:len(rawinput)])))
     elif (readerState & 2) != 0:
         tokenList.append(Token("x", 0))
 
-    for i in tokenList:
-        print(i.value, i.type, i.function)
     for x in range(canvas_width):
         error = False
         y1, error = Compute(tokenList.copy(), xstart + xChangePerPixel * x)
@@ -180,8 +183,6 @@ def Compute(tokenList, xvalue, rawfunction = 0, globalError = False):
             else:
                 globalError = True
         return newvalue, globalError
-        
-
 
 canvas_width = 1000
 canvas_height = 1000
