@@ -45,14 +45,16 @@ entry.insert(0, "Funktsiooni avaldis")
 entry.config(foreground = 'grey')
 entry.place(x=50, y=150, width=150)
 
-canvas_width = 1000
-canvas_height = 1000
+canvas_width = 800
+canvas_height = 800
+
+CANVAS_OFFSET = 2
 
 master = tkinter.Tk()
-master.geometry(f"{canvas_width + 40}x{canvas_height + 40}")
-graphWindow = tkinter.Canvas(master, width=canvas_width, height=canvas_height)
+master.geometry(f"{canvas_width + 50 + CANVAS_OFFSET}x{canvas_height + 40 + CANVAS_OFFSET}")
+graphWindow = tkinter.Canvas(master, width=canvas_width + CANVAS_OFFSET, height=canvas_height + CANVAS_OFFSET)
 master.title("Graafik")
-graphWindow.place(x=40, y=10)
+graphWindow.place(x=40, y=0)
 
 xLabels = []
 yLabels = []
@@ -144,25 +146,25 @@ def CreateGraph():
     xChangePerPixel = (abs(xstart) + abs(xend)) / canvas_width
     yChangePerPixel = (abs(ystart) + abs(yend)) / canvas_height
     
-    yNegativeRatio = abs(yend) / (abs(ystart) + abs(yend))
-    yoffset = canvas_height * yNegativeRatio
+    yRatio = yend / (abs(ystart) + abs(yend))
+    yoffset = canvas_height * yRatio
 
     graphWindow.delete("all")
     
     for x in range(int(canvas_width / 100) + 1):
         xLabels[x].config(text=str(round(xstart + xChangePerPixel * x * 100, 3)))
-        graphWindow.create_line(x * 100, 0, x * 100, canvas_height, fill="lightgray")
+        graphWindow.create_line(x * 100 + CANVAS_OFFSET, 0, x * 100 + CANVAS_OFFSET, canvas_height + CANVAS_OFFSET, fill="lightgray")
     
     for y in range(int(canvas_height / 100) + 1):
         yLabels[y].config(text=str(round(yend + yChangePerPixel * -y * 100, 3)))
-        graphWindow.create_line(0, y * 100, canvas_width, y * 100, fill="lightgray")
+        graphWindow.create_line(0, y * 100 + CANVAS_OFFSET, canvas_width + CANVAS_OFFSET, y * 100 + CANVAS_OFFSET, fill="lightgray")
     
     for x in range(canvas_width):
         error = False
         y1, error = Compute(tokenList.copy(), xstart + xChangePerPixel * x)
         y2, error = Compute(tokenList.copy(), xstart + xChangePerPixel * (x + 1))
         if not error:
-            graphWindow.create_line(x, -(y1 / yChangePerPixel) + yoffset, x + 1, -(y2 / yChangePerPixel) + yoffset)
+            graphWindow.create_line(x + CANVAS_OFFSET, -(y1 / yChangePerPixel) + yoffset + CANVAS_OFFSET, x + 1 + CANVAS_OFFSET, -(y2 / yChangePerPixel) + yoffset + CANVAS_OFFSET)
          
 start = tkinter.ttk.Button(controls, text="Loo graafik", command=CreateGraph)
 start.place(x=300, y=100, width=75)
@@ -205,7 +207,6 @@ def ComputeOperation(operation, globalError):
         if operation[2] != 0:
             value = operation[0] / operation[2]
         else:
-            #globalError = True
             return Token("number", 0)
     elif operation[1] == '+':
         value = operation[0] + operation[2]
@@ -277,3 +278,4 @@ def Compute(tokenList, xvalue, rawfunction = 0, globalError = False):
             else:
                 globalError = True
         return newvalue, globalError
+
