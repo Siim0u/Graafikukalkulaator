@@ -6,7 +6,7 @@ class Token:
         self.value = value
         self.function = function
 
-class TextBoxDesc:
+class EntryDesc:
     def __init__(self, tempText):
       self.tempText = tempText
       self.tempTextActive = True
@@ -18,29 +18,29 @@ controls.geometry("400x200")
 widgets = []
 
 x_start = tkinter.ttk.Entry(controls)
-widgets.append([x_start, TextBoxDesc("X-telje algus")])
+widgets.append([x_start, EntryDesc("X-telje algus")])
 x_start.place(x=50, y=50, width=75)
 x_start.insert(0, "X-telje algus")
 x_start.config(foreground = 'grey')
 x_end = tkinter.ttk.Entry(controls)
-widgets.append([x_end, TextBoxDesc("X-telje lõpp")])
+widgets.append([x_end, EntryDesc("X-telje lõpp")])
 x_end.insert(0, "X-telje lõpp")
 x_end.config(foreground = 'grey')
 x_end.place(x=150, y=50, width=75)
 
 y_start = tkinter.ttk.Entry(controls)
-widgets.append([y_start, TextBoxDesc("Y-telje algus")])
+widgets.append([y_start, EntryDesc("Y-telje algus")])
 y_start.insert(0, "Y-telje algus")
 y_start.config(foreground = 'grey')
 y_start.place(x=50, y=100, width=75)
 y_end = tkinter.ttk.Entry(controls)
-widgets.append([y_end, TextBoxDesc("Y-telje lõpp")])
+widgets.append([y_end, EntryDesc("Y-telje lõpp")])
 y_end.insert(0, "Y-telje lõpp")
 y_end.config(foreground = 'grey')
 y_end.place(x=150, y=100, width=75)
 
 entry = tkinter.ttk.Entry(controls)
-widgets.append([entry, TextBoxDesc("Funktsiooni avaldis")])
+widgets.append([entry, EntryDesc("Funktsiooni avaldis")])
 entry.insert(0, "Funktsiooni avaldis")
 entry.config(foreground = 'grey')
 entry.place(x=50, y=150, width=150)
@@ -65,7 +65,7 @@ for y in range(int(canvas_height / 100) + 1):
     yLabels.append(tkinter.Label(master, text='0'))
     yLabels[y].place(x=0, y=y * 100)
 
-def on_entry_click(event):
+def OnEntryClick(event):
     widget = event.widget
     for i in widgets:
         if i[0] == widget and i[1].tempTextActive:
@@ -75,7 +75,7 @@ def on_entry_click(event):
             i[1].tempTextActive = False
             break
         
-def on_focusout(event):
+def OnEntryFocusOut(event):
     widget = event.widget
     for i in widgets:
         if i[0] == widget and widget.get() == '':
@@ -84,16 +84,16 @@ def on_focusout(event):
             i[1].tempTextActive = True
             break
    
-x_start.bind("<FocusIn>", on_entry_click)
-x_start.bind("<FocusOut>", on_focusout)
-x_end.bind("<FocusIn>", on_entry_click)
-x_end.bind("<FocusOut>", on_focusout)
-y_start.bind("<FocusIn>", on_entry_click)
-y_start.bind("<FocusOut>", on_focusout)
-y_end.bind("<FocusIn>", on_entry_click)
-y_end.bind("<FocusOut>", on_focusout)
-entry.bind("<FocusIn>", on_entry_click)
-entry.bind("<FocusOut>", on_focusout)
+x_start.bind("<FocusIn>", OnEntryClick)
+x_start.bind("<FocusOut>", OnEntryFocusOut)
+x_end.bind("<FocusIn>", OnEntryClick)
+x_end.bind("<FocusOut>", OnEntryFocusOut)
+y_start.bind("<FocusIn>", OnEntryClick)
+y_start.bind("<FocusOut>", OnEntryFocusOut)
+y_end.bind("<FocusIn>", OnEntryClick)
+y_end.bind("<FocusOut>", OnEntryFocusOut)
+entry.bind("<FocusIn>", OnEntryClick)
+entry.bind("<FocusOut>", OnEntryFocusOut)
 
 def CreateGraph():
     tokenList = []
@@ -216,17 +216,21 @@ def ComputeOperation(operation, globalError):
 def Compute(tokenList, xvalue, rawfunction = 0, globalError = False):
     while len(tokenList) > 1:
         currentOperation, globalError = GetOperation(tokenList, 0, xvalue, globalError)
-        if currentOperation[1] in ['*', '/']:   # Kui tehe on * või /, siis saab selle väärtuse kohe välja arvutada
+        # Kui tehe on * või /, siis saab selle väärtuse kohe välja arvutada
+        if currentOperation[1] in ['*', '/']:
             tokenList[0] = ComputeOperation(currentOperation, globalError)
             del tokenList[1:3]
         elif currentOperation[1] in ['+', '-']:
-            if len(tokenList) <= 3: # Kui tehe on + või - ja see on viimane allesjäänud tehe, võib selle kohe välja arvutada
+            # Kui tehe on + või - ja see on viimane allesjäänud tehe, võib selle kohe välja arvutada
+            if len(tokenList) <= 3:
                 tokenList[0] = ComputeOperation(currentOperation, globalError)
                 del tokenList[1:3]
-            elif GetOperation(tokenList, 2, xvalue, globalError)[1] in ['+', '-']:   # Kui + või - tehe ei ole viimane, kuid ka sellest järgmine tehe on + või -, võib kohe arvutada
+            # Kui + või - tehe ei ole viimane, kuid ka sellest järgmine tehe on + või -, võib kohe arvutada
+            elif GetOperation(tokenList, 2, xvalue, globalError)[1] in ['+', '-']:
                 tokenList[0] = ComputeOperation(currentOperation, globalError)
                 del tokenList[1:3]
-            else:   # Kui + või - tehe ei ole viimane, ja sellest järgmine tehe on * või /, arvutatakse kohe välja järgmise tehte väärtus ja eelmine tehe arvutatakse välja järgmisel tsüklil, kui see on siis võimalik
+            # Kui + või - tehe ei ole viimane, ja sellest järgmine tehe on * või /, arvutatakse kohe välja järgmise tehte väärtus ja eelmine tehe arvutatakse välja järgmisel tsüklil, kui see on siis võimalik
+            else:
                 nextOperation, globalError = GetOperation(tokenList, 2, xvalue, globalError)
                 tokenList[2] = ComputeOperation(nextOperation)
                 del tokenList[3:5]
