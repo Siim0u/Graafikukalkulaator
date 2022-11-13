@@ -11,42 +11,11 @@ class EntryDesc:
       self.tempText = tempText
       self.tempTextActive = True
 
-controls = tkinter.Tk()
-controls.title("Sisend")
-controls.geometry("400x200")
-
 widgets = []
 
-x_start = tkinter.ttk.Entry(controls)
-widgets.append([x_start, EntryDesc("X-telje algus")])
-x_start.place(x=50, y=50, width=75)
-x_start.insert(0, "X-telje algus")
-x_start.config(foreground = 'grey')
-x_end = tkinter.ttk.Entry(controls)
-widgets.append([x_end, EntryDesc("X-telje lõpp")])
-x_end.insert(0, "X-telje lõpp")
-x_end.config(foreground = 'grey')
-x_end.place(x=150, y=50, width=75)
-
-y_start = tkinter.ttk.Entry(controls)
-widgets.append([y_start, EntryDesc("Y-telje algus")])
-y_start.insert(0, "Y-telje algus")
-y_start.config(foreground = 'grey')
-y_start.place(x=50, y=100, width=75)
-y_end = tkinter.ttk.Entry(controls)
-widgets.append([y_end, EntryDesc("Y-telje lõpp")])
-y_end.insert(0, "Y-telje lõpp")
-y_end.config(foreground = 'grey')
-y_end.place(x=150, y=100, width=75)
-
-entry = tkinter.ttk.Entry(controls)
-widgets.append([entry, EntryDesc("Funktsiooni avaldis")])
-entry.insert(0, "Funktsiooni avaldis")
-entry.config(foreground = 'grey')
-entry.place(x=50, y=150, width=150)
-
 canvas_width = 800
-canvas_height = 800
+canvas_height = 900
+graph_height = 800
 
 CANVAS_OFFSET = 2
 
@@ -56,14 +25,43 @@ graphWindow = tkinter.Canvas(master, width=canvas_width + CANVAS_OFFSET, height=
 master.title("Graafik")
 graphWindow.place(x=40, y=0)
 
+x_start = tkinter.ttk.Entry(master)
+widgets.append([x_start, EntryDesc("X-telje algus")])
+x_start.place(x=50, y=875, width=75)
+x_start.insert(0, "X-telje algus")
+x_start.config(foreground = 'grey')
+x_end = tkinter.ttk.Entry(master)
+widgets.append([x_end, EntryDesc("X-telje lõpp")])
+x_end.insert(0, "X-telje lõpp")
+x_end.config(foreground = 'grey')
+x_end.place(x=150, y=875, width=75)
+
+y_start = tkinter.ttk.Entry(master)
+widgets.append([y_start, EntryDesc("Y-telje algus")])
+y_start.insert(0, "Y-telje algus")
+y_start.config(foreground = 'grey')
+y_start.place(x=250, y=875, width=75)
+y_end = tkinter.ttk.Entry(master)
+widgets.append([y_end, EntryDesc("Y-telje lõpp")])
+y_end.insert(0, "Y-telje lõpp")
+y_end.config(foreground = 'grey')
+y_end.place(x=350, y=875, width=75)
+
+entry = tkinter.ttk.Entry(master)
+widgets.append([entry, EntryDesc("Funktsiooni avaldis")])
+entry.insert(0, "Funktsiooni avaldis")
+entry.config(foreground = 'grey')
+entry.place(x=450, y=875, width=150)
+
+
 xLabels = []
 yLabels = []
 
 for x in range(int(canvas_width / 100) + 1):
     xLabels.append(tkinter.Label(master, text='0'))
-    xLabels[x].place(x=x * 100 + 20, y=canvas_height+20)
+    xLabels[x].place(x=x * 100 + 20, y=graph_height+20)
 
-for y in range(int(canvas_height / 100) + 1):
+for y in range(int(graph_height / 100) + 1):
     yLabels.append(tkinter.Label(master, text='0'))
     yLabels[y].place(x=0, y=y * 100)
 
@@ -144,18 +142,18 @@ def CreateGraph():
     xend = float(x_end.get())
     yend = float(y_end.get())
     xChangePerPixel = (abs(xstart) + abs(xend)) / canvas_width
-    yChangePerPixel = (abs(ystart) + abs(yend)) / canvas_height
+    yChangePerPixel = (abs(ystart) + abs(yend)) / graph_height
     
     yRatio = yend / (abs(ystart) + abs(yend))
-    yoffset = canvas_height * yRatio
+    yoffset = graph_height * yRatio
 
     graphWindow.delete("all")
     
     for x in range(int(canvas_width / 100) + 1):
         xLabels[x].config(text=str(round(xstart + xChangePerPixel * x * 100, 3)))
-        graphWindow.create_line(x * 100 + CANVAS_OFFSET, 0, x * 100 + CANVAS_OFFSET, canvas_height + CANVAS_OFFSET, fill="lightgray")
+        graphWindow.create_line(x * 100 + CANVAS_OFFSET, 0, x * 100 + CANVAS_OFFSET, graph_height + CANVAS_OFFSET, fill="lightgray")
     
-    for y in range(int(canvas_height / 100) + 1):
+    for y in range(int(graph_height / 100) + 1):
         yLabels[y].config(text=str(round(yend + yChangePerPixel * -y * 100, 3)))
         graphWindow.create_line(0, y * 100 + CANVAS_OFFSET, canvas_width + CANVAS_OFFSET, y * 100 + CANVAS_OFFSET, fill="lightgray")
     
@@ -166,8 +164,8 @@ def CreateGraph():
         if not error:
             graphWindow.create_line(x + CANVAS_OFFSET, -(y1 / yChangePerPixel) + yoffset + CANVAS_OFFSET, x + 1 + CANVAS_OFFSET, -(y2 / yChangePerPixel) + yoffset + CANVAS_OFFSET)
          
-start = tkinter.ttk.Button(controls, text="Loo graafik", command=CreateGraph)
-start.place(x=300, y=100, width=75)
+start = tkinter.ttk.Button(master, text="Loo graafik", command=CreateGraph)
+start.place(x=650, y=875, width=75, height=50)
 
 def GetOperation(tokenList, offset, xvalue, globalError):
     currentOperation = [0, 0, 0]
@@ -278,4 +276,3 @@ def Compute(tokenList, xvalue, rawfunction = 0, globalError = False):
             else:
                 globalError = True
         return newvalue, globalError
-
